@@ -3,10 +3,12 @@
 PyCipher is a simple password generator app built in Python. It allows you to generate random passwords of customizable length, with options to include digits and symbols. The app provides a command-line interface for ease of use.
 
 ## Features
-- Generate random passwords of variable length.
-- Choose whether to include digits and symbols in the generated passwords.
-- Option to exclude ambiguous characters ('l', '1', 'O', '0') that can be easily confused.
-- Basic error handling for invalid input and interruptions during password generation.
+- Generate strong passwords with customizable length.
+- Include digits, symbols, and custom characters for enhanced security.
+- Exclude ambiguous characters for better readability.
+- User-friendly interface with clear prompts and error handling.
+- Basic password strength check for additional security awareness.
+- Improved code structure and readability.
 
 ## Requirements
 
@@ -23,9 +25,9 @@ PyCipher is a simple password generator app built in Python. It allows you to ge
 python pycipher.py
 ```
 
-4. Follow the prompts to specify the desired password length, inclusion of digits and symbols, and exclusion of ambiguous characters.
+4. Follow the prompts to define your desired password length, character inclusion options.
 
-5. The app will generate a random password based on your input and display it on the screen.
+5. The generated password will be displayed on the screen.
 
 ## Examples
 
@@ -52,11 +54,12 @@ python pycipher.py
 **Generated Password**: eCbLmeWz
 
 ## Future Enhancements
-- Validation for password length within a reasonable range.
-- Improved error handling and informative error messages.
-- User interface enhancements such as a graphical interface.
-- Unit tests to ensure the correctness of the password generation.
-- Logging functionality for error tracking and debugging.
+- Advanced password strength checks.
+- Password management features (optional).
+- Graphical user interface (optional).
+- More robust error handling and informative messages.
+- Unit tests for code correctness.
+- Logging functionality for error tracking.
 
 ## Contributing
 Contributions are welcome! If you have any ideas, suggestions, or bug reports, please open an issue or submit a pull request.

@@ -1,13 +1,23 @@
 import string
 import secrets
+import random
 
-# Constants
-DEFAULT_PASSWORD_LENGTH = 12
-DEFAULT_INCLUDE_DIGITS = True
-DEFAULT_INCLUDE_SYMBOLS = True
-DEFAULT_EXCLUDE_AMBIGUOUS = True
+def generate_password(length=12, include_digits=True, include_symbols=True, exclude_ambiguous=True):
+    """Generates a random password based on given parameters.
 
-def generate_password(length=DEFAULT_PASSWORD_LENGTH, include_digits=DEFAULT_INCLUDE_DIGITS, include_symbols=DEFAULT_INCLUDE_SYMBOLS, exclude_ambiguous=DEFAULT_EXCLUDE_AMBIGUOUS):
+    Args:
+        length (int, optional): Password length. Defaults to 12.
+        include_digits (bool, optional): Include digits. Defaults to True.
+        include_symbols (bool, optional): Include symbols. Defaults to True.
+        exclude_ambiguous (bool, optional): Exclude ambiguous characters. Defaults to True.
+
+    Returns:
+        str: Generated password.
+    """
+
+    if length <= 0:
+        raise ValueError("Password length must be positive.")
+
     characters = string.ascii_letters
     if include_digits:
         characters += string.digits
@@ -15,35 +25,68 @@ def generate_password(length=DEFAULT_PASSWORD_LENGTH, include_digits=DEFAULT_INC
         characters += string.punctuation
 
     if exclude_ambiguous:
-        ambiguous_characters = 'l1IiL0Oo'
-        characters = ''.join(c for c in characters if c not in ambiguous_characters)
+        ambiguous_chars = 'l1IiL0Oo'
+        characters = ''.join(c for c in characters if c not in ambiguous_chars)
 
-    try:
-        password = ''.join(secrets.choice(characters) for _ in range(length))
-        return password
-    except ValueError:
-        print("Error: Invalid password length.")
-        return None
+    return ''.join(secrets.choice(characters) for _ in range(length))
+
+def check_password_strength(password):
+    """Checks password strength based on basic criteria.
+
+    Args:
+        password (str): The password to check.
+
+    Returns:
+        str: Strength level (weak, medium, strong).
+    """
+    lower = any(c.islower() for c in password)
+    upper = any(c.isupper() for c in password)
+    digit = any(c.isdigit() for c in password)
+    special = any(not c.isalnum() for c in password)
+
+    if sum([lower, upper, digit, special]) < 3:
+        return "weak"
+    elif sum([lower, upper, digit, special]) < 4:
+        return "medium"
+    else:
+        return "strong"
+
+def get_yes_no_input(prompt, default_value="y"):
+  """Gets yes/no input from the user with error handling.
+
+  Args:
+      prompt (str): The prompt to display to the user.
+      default_value (str, optional): The default value to assume if no input is provided. Defaults to "y".
+
+  Returns:
+      bool: True if the user enters "y" (or the default value), False otherwise.
+  """
+  while True:
+    user_input = input(prompt + " ") or default_value
+    if user_input.lower() in ("y", "n"):
+      return user_input.lower() == "y"
+    else:
+      print("Error: Invalid input. Please enter 'y' or 'n'.")
 
 def main():
-    try:
-        length = int(input("Enter the desired password length (default is {}): ".format(DEFAULT_PASSWORD_LENGTH)))
+  try:
+    length = int(input("Enter password length (default 12): ") or 12)
 
-        if length <= 0:
-            raise ValueError("Invalid input. Password length must be a positive integer.")
+    include_digits = get_yes_no_input("Include digits? (y/n, default y): ")
+    include_symbols = get_yes_no_input("Include symbols? (y/n, default y): ")
+    exclude_ambiguous = get_yes_no_input("Exclude ambiguous chars? (y/n, default y): ")
 
-        include_digits = input("Include digits (y/n, default is {}): ".format("y" if DEFAULT_INCLUDE_DIGITS else "n")).lower() == 'y'
-        include_symbols = input("Include symbols (y/n, default is {}): ".format("y" if DEFAULT_INCLUDE_SYMBOLS else "n")).lower() == 'y'
-        exclude_ambiguous = input("Exclude ambiguous characters (e.g., 'l', '1', 'I', 'i', 'O', 'o', '0') (y/n, default is {}): ".format("y" if DEFAULT_EXCLUDE_AMBIGUOUS else "n")).lower() == 'y'
+    password = generate_password(
+        length=length,
+        include_digits=include_digits,
+        include_symbols=include_symbols,
+        exclude_ambiguous=exclude_ambiguous,
+    )
 
-        password = generate_password(length, include_digits, include_symbols, exclude_ambiguous)
+    print("Generated Password:", password)
+    print("Password Strength:", check_password_strength(password))
+  except ValueError as e:
+    print(f"Error: {e}")
 
-        if password:
-            print("Generated Password:", password)
-    except ValueError as ve:
-        print("Error:", str(ve))
-    except KeyboardInterrupt:
-        print("\nPassword generation interrupted.")
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+  main()
